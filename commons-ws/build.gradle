@@ -1,0 +1,19 @@
+subprojects {
+	pluginManager.withPlugin("maven-publish") {
+		group = 'com.test'
+
+		publishing {
+			repositories {
+				maven {
+					credentials {
+						username = "admin"
+						password = "admin123"
+					}
+					String baseUrl = "http://localhost:8081/nexus/content/repositories/"
+					//url = version.endsWith('SNAPSHOT') ? baseUrl + "snapshots": baseUrl + "releases"
+					url = baseUrl + "snapshots"
+				}
+			}
+		}
+	}
+}
