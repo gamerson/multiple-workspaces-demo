@@ -1,5 +1,3 @@
-apply plugin: "maven-publish"
-
 dependencies {
 	compileOnly group: "com.liferay", name: "com.liferay.petra.io"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.lang"
@@ -13,13 +11,5 @@ dependencies {
 
 	compile project(":modules:library-one:com.test.library.one.api")
 }
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-} 
 
 version = "1.0.0-SNAPSHOT"

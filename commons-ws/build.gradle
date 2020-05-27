@@ -1,6 +1,10 @@
+allprojects {
+	group = 'com.test'
+}
+
 subprojects {
-	pluginManager.withPlugin("maven-publish") {
-		group = 'com.test'
+	pluginManager.withPlugin("com.liferay.osgi.plugin") {
+		apply plugin: "maven-publish"
 
 		publishing {
 			repositories {
@@ -9,9 +13,35 @@ subprojects {
 						username = "admin"
 						password = "admin123"
 					}
+
 					String baseUrl = "http://localhost:8081/nexus/content/repositories/"
-					//url = version.endsWith('SNAPSHOT') ? baseUrl + "snapshots": baseUrl + "releases"
-					url = baseUrl + "snapshots"
+
+					url {
+						baseUrl + version.endsWith('SNAPSHOT') ? "snapshots" : "releases"
+					}
+				}
+			}
+
+			publications {
+				mavenJava(MavenPublication) {
+					from components.java
+				}
+			}
+		}
+
+		afterEvaluate { project ->
+			if (deploy.enabled) {
+				deploy.doLast {
+					configurations.default.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+						if (artifact.extension == 'jar') {
+							logger.lifecycle "Deploying required dependency file {}", artifact
+							project.copy {
+								from artifact.file
+								into project.deploy.destinationDir
+								rename { "${artifact.name}.${artifact.extension}" }
+							}
+						}
+					}
 				}
 			}
 		}

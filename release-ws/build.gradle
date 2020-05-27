@@ -6,19 +6,15 @@ repositories {
 
 configurations {
 	distBoms	
-	distBundles
+	distArtifacts
 }
 
 dependencies {
-	distBoms "com.test:one:1.0.0-SNAPSHOT@pom"
+	distBoms group: "com.test", name: "one", version: "1.0.0-SNAPSHOT", ext: "pom"
+	distBoms group: "com.test", name: "two", version: "1.0.0-SNAPSHOT", ext: "pom"
 }
 
-tasks.register("assembleBundle") {
-	dependsOn "initBundle"
-
-  // parse BOMs listed in assemble configuration
-  // transitively pull all resolved GAVs into correct deployment area
-
+tasks.named("distBundle") {
 	doLast  {
 		Set<File> bomFiles = configurations.distBoms.resolve();
 		
@@ -50,19 +46,27 @@ tasks.register("assembleBundle") {
 				sb.append(gPathResult.getProperty("version"));
 
 				dependencies {
-					distBundles sb.toString()
+					distArtifacts sb.toString()
 				}
 			}
 		}
 		
-		Set<File> distFiles = configurations.distBundles.resolve();
+		def resolvedArtifacts = configurations.distArtifacts.resolvedConfiguration.resolvedArtifacts
 		
-		distFiles.each {
-			println "deploy this to osgi/* $it"
-		}	
-	}
-}
+		resolvedArtifacts.findAll { it.file.name.endsWith(".jar") }.each { artifact ->
+			project.copy {
+				from artifact.file
+				into new File(distBundle.destinationDir, "/osgi/modules")
+				rename { "${artifact.name}.${artifact.extension}" }
+			}
+		}
 
-tasks.named("distBundle") {
-  dependsOn "assembleBundle"
+		resolvedArtifacts.findAll { it.file.name.endsWith(".war") }.each { artifact ->
+			project.copy {
+				from artifact.file
+				into new File(distBundle.destinationDir, "/osgi/war")
+				rename { "${artifact.name}.${artifact.extension}" }
+			}
+		}
+	}
 }

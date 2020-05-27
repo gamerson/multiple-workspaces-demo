@@ -1,4 +1,1 @@
-Bundle-Name: library-one-service
-Bundle-SymbolicName: com.test.library.one.service
-Bundle-Version: 1.0.0
 -dsannotations-options: inherit

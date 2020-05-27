@@ -1,6 +1,3 @@
-Bundle-Name: library-two-api
-Bundle-SymbolicName: com.test.library.two.api
-Bundle-Version: 1.0.0
 Export-Package:\
 	com.test.library.two.api
 -check: EXPORTS
