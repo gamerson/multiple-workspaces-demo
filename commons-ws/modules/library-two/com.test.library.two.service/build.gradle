@@ -11,7 +11,7 @@ dependencies {
 	compileOnly group: "org.osgi", name: "org.osgi.core"
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
 
-	compileOnly project(":modules:library-two:com.test.library.two.api")
+	compile project(":modules:library-two:com.test.library.two.api")
 }
 
 publishing {
