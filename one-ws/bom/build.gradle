@@ -1,0 +1,20 @@
+apply plugin: "java-platform"
+apply plugin: "maven-publish"
+
+dependencies {
+	constraints {
+		runtime project(":modules:one-portlet")
+		runtime project(":modules:another-one-portlet")
+	}
+}
+
+publishing {
+	publications {
+		bom(MavenPublication) {
+			from components.javaPlatform
+			artifactId = "one"
+		}
+	}
+}
+
+version = "1.0.0-SNAPSHOT"

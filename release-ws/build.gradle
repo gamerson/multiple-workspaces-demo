@@ -1,0 +1,68 @@
+import groovy.util.slurpersupport.GPathResult;
+
+repositories {
+	mavenLocal()
+}
+
+configurations {
+	distBoms	
+	distBundles
+}
+
+dependencies {
+	distBoms "com.test:one:1.0.0-SNAPSHOT@pom"
+}
+
+tasks.register("assembleBundle") {
+	dependsOn "initBundle"
+
+  // parse BOMs listed in assemble configuration
+  // transitively pull all resolved GAVs into correct deployment area
+
+	doLast  {
+		Set<File> bomFiles = configurations.distBoms.resolve();
+		
+		bomFiles.each {
+			XmlSlurper xmlSlurper = new XmlSlurper();
+
+			GPathResult gPathResult = xmlSlurper.parse(it);
+
+			gPathResult = (GPathResult)gPathResult.getProperty(
+				"dependencyManagement");
+
+			gPathResult = (GPathResult)gPathResult.getProperty(
+				"dependencies");
+
+			gPathResult = (GPathResult)gPathResult.getProperty(
+				"dependency");
+
+			Iterator<?> iterator = gPathResult.iterator();
+
+			while (iterator.hasNext()) {
+				gPathResult = (GPathResult)iterator.next();
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.append(gPathResult.getProperty("groupId"));
+				sb.append(':');
+				sb.append(gPathResult.getProperty("artifactId"));
+				sb.append(':');
+				sb.append(gPathResult.getProperty("version"));
+
+				dependencies {
+					distBundles sb.toString()
+				}
+			}
+		}
+		
+		Set<File> distFiles = configurations.distBundles.resolve();
+		
+		distFiles.each {
+			println "deploy this to osgi/* $it"
+		}	
+	}
+}
+
+tasks.named("distBundle") {
+  dependsOn "assembleBundle"
+}

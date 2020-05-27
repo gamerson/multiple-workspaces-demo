@@ -1,0 +1,4 @@
+Bundle-Name: another-one-portlet
+Bundle-SymbolicName: another.one.portlet
+Bundle-Version: 1.0.0
+Export-Package: another.one.portlet.constants

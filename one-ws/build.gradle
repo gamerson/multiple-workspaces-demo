@@ -1,0 +1,35 @@
+allprojects {
+	repositories {
+		maven {
+			url "http://localhost:8081/nexus/content/groups/public/"
+		}
+		mavenLocal()
+	}
+}
+
+subprojects {
+	pluginManager.withPlugin("maven-publish") {
+		group = 'com.test'
+
+		publishing {
+			repositories {
+				maven {
+					credentials {
+						username = "admin"
+						password = "admin123"
+					}
+					String baseUrl = "http://localhost:8081/nexus/content/repositories/"
+					//url = version.endsWith('SNAPSHOT') ? baseUrl + "snapshots": baseUrl + "releases"
+					url = baseUrl + "snapshots"
+				}
+			}
+		}
+	}
+}
+
+dependencies {
+	providedModules group: "com.test", name: "com.test.library.one.api", version: "1.0.0-SNAPSHOT"
+	providedModules group: "com.test", name: "com.test.library.one.service", version: "1.0.0-SNAPSHOT"
+	
+	targetPlatformBoms group: "com.test", name: "commons", version: "1.0.0-SNAPSHOT"
+}
