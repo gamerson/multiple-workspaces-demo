@@ -1,13 +1,14 @@
 apply plugin: "java-platform"
 apply plugin: "maven-publish"
 
-dependencies {
-	constraints {
-		api project(":modules:library-one:com.test.library.one.api")
-		api project(":modules:library-two:com.test.library.two.api")
-
-		runtime project(":modules:library-one:com.test.library.one.service")
-		runtime project(":modules:library-two:com.test.library.two.service")
+gradle.projectsEvaluated {
+	Set<Project> published = rootProject.allprojects.findAll { p -> p.pluginManager.hasPlugin("maven-publish") && !p.equals(project(":bom"))}
+	dependencies {
+		constraints {
+			published.each {
+				api it
+			}
+		}
 	}
 }
 
