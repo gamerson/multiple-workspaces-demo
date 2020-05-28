@@ -9,6 +9,17 @@ dependencies {
 }
 
 publishing {
+	repositories {
+		maven {
+			credentials {
+				username = "admin"
+				password = "admin123"
+			}
+
+			url "http://localhost:8081/nexus/content/repositories/snapshots"
+		}
+	}
+
 	publications {
 		bom(MavenPublication) {
 			from components.javaPlatform

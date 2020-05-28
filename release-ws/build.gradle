@@ -14,8 +14,8 @@ configurations {
 }
 
 dependencies {
-	distBoms group: "com.test", name: "product-one", version: "1.0.0-SNAPSHOT", ext: "pom"
-	distBoms group: "com.test", name: "product-two", version: "1.0.0-SNAPSHOT", ext: "pom"
+	distBoms group: "com.test", name: "product.one", version: "1.0.0-SNAPSHOT", ext: "pom"
+	distBoms group: "com.test", name: "product.two", version: "1.0.0-SNAPSHOT", ext: "pom"
 }
 
 tasks.named("distBundle") {
