@@ -3,10 +3,13 @@ allprojects {
 		maven {
 			url "http://localhost:8081/nexus/content/groups/public/"
 		}
-		mavenLocal()
 	}
 
 	group = "com.test"
+}
+
+dependencies {
+	targetPlatformBoms group: "com.test", name: "commons", version: "1.0.0-SNAPSHOT"
 }
 
 subprojects {
@@ -21,11 +24,7 @@ subprojects {
 						password = "admin123"
 					}
 
-					String baseUrl = "http://localhost:8081/nexus/content/repositories/"
-
-					url {
-						baseUrl + version.endsWith('SNAPSHOT') ? "snapshots" : "releases"
-					}
+					url "http://localhost:8081/nexus/content/repositories/snapshots"
 				}
 			}
 
@@ -53,8 +52,4 @@ subprojects {
 			}
 		}
 	}
-}
-
-dependencies {
-	targetPlatformBoms group: "com.test", name: "commons", version: "1.0.0-SNAPSHOT"
 }

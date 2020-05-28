@@ -1,7 +1,11 @@
 import groovy.util.slurpersupport.GPathResult;
 
-repositories {
-	mavenLocal()
+allprojects {
+	repositories {
+		maven {
+			url "http://localhost:8081/nexus/content/groups/public/"
+		}
+	}
 }
 
 configurations {
@@ -10,8 +14,8 @@ configurations {
 }
 
 dependencies {
-	distBoms group: "com.test", name: "one", version: "1.0.0-SNAPSHOT", ext: "pom"
-	distBoms group: "com.test", name: "two", version: "1.0.0-SNAPSHOT", ext: "pom"
+	distBoms group: "com.test", name: "product-one", version: "1.0.0-SNAPSHOT", ext: "pom"
+	distBoms group: "com.test", name: "product-two", version: "1.0.0-SNAPSHOT", ext: "pom"
 }
 
 tasks.named("distBundle") {

@@ -3,8 +3,8 @@ apply plugin: "maven-publish"
 
 dependencies {
 	constraints {
-		runtime project(":modules:one-portlet")
-		runtime project(":modules:another-one-portlet")
+		runtime project(":modules:product-two-portlet")
+		runtime project(":modules:another-two-portlet")
 	}
 }
 
@@ -12,7 +12,7 @@ publishing {
 	publications {
 		bom(MavenPublication) {
 			from components.javaPlatform
-			artifactId = "one"
+			artifactId = "product-two"
 		}
 	}
 }

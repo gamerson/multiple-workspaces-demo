@@ -14,11 +14,7 @@ subprojects {
 						password = "admin123"
 					}
 
-					String baseUrl = "http://localhost:8081/nexus/content/repositories/"
-
-					url {
-						baseUrl + version.endsWith('SNAPSHOT') ? "snapshots" : "releases"
-					}
+					url "http://localhost:8081/nexus/content/repositories/snapshots"
 				}
 			}
 
