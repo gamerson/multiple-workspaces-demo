@@ -12,8 +12,6 @@ gradle.projectsEvaluated {
 	}
 }
 
-group = "com.test"
-
 publishing {
 	repositories {
 		maven {
