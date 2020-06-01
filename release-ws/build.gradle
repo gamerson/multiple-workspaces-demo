@@ -9,19 +9,20 @@ allprojects {
 }
 
 configurations {
-	distBoms	
-	distArtifacts
+	providedBoms
+	providedArtifacts
 }
 
 dependencies {
-	distBoms group: "com.test", name: "product.one", version: "1.0.0-SNAPSHOT", ext: "pom"
-	distBoms group: "com.test", name: "product.two", version: "1.0.0-SNAPSHOT", ext: "pom"
+	providedBoms group: "com.test", name: "commons", version: "1.0.0-SNAPSHOT", ext: "pom"
+	providedBoms group: "com.test", name: "product.one", version: "1.0.0-SNAPSHOT", ext: "pom"
+	providedBoms group: "com.test", name: "product.two", version: "1.0.0-SNAPSHOT", ext: "pom"
 }
 
-tasks.named("distBundle") {
+tasks.named("distBundle") { task ->
 	doLast  {
-		Set<File> bomFiles = configurations.distBoms.resolve();
-		
+		Set<File> bomFiles = configurations.providedBoms.resolve();
+
 		bomFiles.each {
 			XmlSlurper xmlSlurper = new XmlSlurper();
 
@@ -50,17 +51,17 @@ tasks.named("distBundle") {
 				sb.append(gPathResult.getProperty("version"));
 
 				dependencies {
-					distArtifacts sb.toString()
+					providedArtifacts sb.toString()
 				}
 			}
 		}
-		
-		def resolvedArtifacts = configurations.distArtifacts.resolvedConfiguration.resolvedArtifacts
-		
+
+		def resolvedArtifacts = configurations.providedArtifacts.resolvedConfiguration.resolvedArtifacts
+
 		resolvedArtifacts.findAll { it.file.name.endsWith(".jar") }.each { artifact ->
 			project.copy {
 				from artifact.file
-				into new File(distBundle.destinationDir, "/osgi/modules")
+				into new File(task.destinationDir, "/osgi/modules")
 				rename { "${artifact.name}.${artifact.extension}" }
 			}
 		}
@@ -68,7 +69,7 @@ tasks.named("distBundle") {
 		resolvedArtifacts.findAll { it.file.name.endsWith(".war") }.each { artifact ->
 			project.copy {
 				from artifact.file
-				into new File(distBundle.destinationDir, "/osgi/war")
+				into new File(task.destinationDir, "/osgi/war")
 				rename { "${artifact.name}.${artifact.extension}" }
 			}
 		}
