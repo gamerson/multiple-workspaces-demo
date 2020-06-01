@@ -18,9 +18,7 @@ dependencies {
 	cssBuilder group: "com.liferay", name: "com.liferay.css.builder", version: "3.0.2"
 	
 	compile group: "com.test", name: "com.test.library.one.api"
-	runtimeOnly group: "com.test", name: "com.test.library.one.service"
 	compile group: "com.test", name: "com.test.library.two.api"
-	runtimeOnly group: "com.test", name: "com.test.library.two.service"
 }
 
 version = "1.0.0-SNAPSHOT"
