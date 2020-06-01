@@ -1,3 +1,5 @@
+import groovy.util.slurpersupport.GPathResult;
+
 allprojects {
 	repositories {
 		maven {
@@ -23,7 +25,6 @@ tasks.named("initBundle") { task ->
 		Set<File> bomFiles  = configurations.providedBoms.resolve()
 
 		bomFiles.each {
-			println it
 			XmlSlurper xmlSlurper = new XmlSlurper();
 
 			GPathResult gPathResult = xmlSlurper.parse(it);
@@ -77,7 +78,7 @@ tasks.named("initBundle") { task ->
 }
 
 subprojects {
-	pluginManager.withPlugin("com.liferay.osgi.plugin") {
+	def action = { plugin ->
 		apply plugin: "maven-publish"
 
 		publishing {
@@ -93,8 +94,15 @@ subprojects {
 			}
 
 			publications {
-				mavenJava(MavenPublication) {
-					from components.java
+				if (plugin.id.equals("war")) {
+					mavenWeb(MavenPublication) {
+							from components.web
+					}
+				}
+				else {
+					mavenJava(MavenPublication) {
+							from components.java
+					}
 				}
 			}
 		}
@@ -116,4 +124,6 @@ subprojects {
 			}
 		}
 	}
+	pluginManager.withPlugin("com.liferay.osgi.plugin", action)
+	pluginManager.withPlugin("war", action)
 }

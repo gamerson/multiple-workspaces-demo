@@ -78,7 +78,7 @@ tasks.named("initBundle") { task ->
 }
 
 subprojects {
-	pluginManager.withPlugin("com.liferay.osgi.plugin") {
+	def action = { plugin ->
 		apply plugin: "maven-publish"
 
 		publishing {
@@ -94,8 +94,15 @@ subprojects {
 			}
 
 			publications {
-				mavenJava(MavenPublication) {
-					from components.java
+				if (plugin.id.equals("war")) {
+					mavenWeb(MavenPublication) {
+							from components.web
+					}
+				}
+				else {
+					mavenJava(MavenPublication) {
+							from components.java
+					}
 				}
 			}
 		}
@@ -117,4 +124,6 @@ subprojects {
 			}
 		}
 	}
+	pluginManager.withPlugin("com.liferay.osgi.plugin", action)
+	pluginManager.withPlugin("war", action)
 }
