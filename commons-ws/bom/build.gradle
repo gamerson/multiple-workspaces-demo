@@ -3,7 +3,7 @@ apply plugin: "maven-publish"
 
 gradle.projectsEvaluated {
 	Set<Project> publishedModules = rootProject.allprojects.findAll { p ->
-		(p.pluginManager.hasPlugin("maven-publish") || p.pluginManager.hasPlugin("war")) && !p.equals(project(":bom"))
+		p.pluginManager.hasPlugin("maven-publish") && !p.equals(project(":bom"))
 	}
 
 	dependencies {
